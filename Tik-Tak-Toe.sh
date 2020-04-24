@@ -2,7 +2,21 @@
 
 declare -a playBoard
 
+#CONSTANT
 TOTAL_CELLS=10
+
+#Assigning nought or cross to player
+function assignNoughtOrCross () {
+	number=$((RANDOM%2))
+	if [ $number -eq 0 ];
+	then
+			player=$CROSS
+			computer=$NOUGHT
+	else
+			player=$NOUGHT
+			computer=$CROSS
+	fi
+}
 
 #display play Board
 function displayBoard () {

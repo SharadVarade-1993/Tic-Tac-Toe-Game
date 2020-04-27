@@ -97,8 +97,8 @@ function playerTurn () {
 
 #computer turn
 function computerTurn () {
-		compuPosi=$((RANDOM%9 +1))
-		echo "computer position" $compPosi
+		compuPosi=$((RANDOM%9 + 1))
+		echo "computer position" $compuPosi
 		positionAvailable  $compuPosi $computer
 		displayBoard
 		checkWinner $computer "Computer"
@@ -162,7 +162,7 @@ function resetBoard () {
 }
 
 function main () {
-	reset
+	resetBoard
 	checkPlayFirst
 	displayBoard
 	for ((i=1; i<$TOTAL_CELLS; i++))

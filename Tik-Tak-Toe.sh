@@ -102,49 +102,59 @@ function playerTurn () {
 		num=1
 }
 
+#check available corner
+function availableCorner () {
+	if [[ ${computerBoard[1]} == " " ]];
+	then
+			compuPosi=1
+	elif [[ ${computerBoard[3]} == " " ]];
+	then
+			compuPosi=3
+	elif [[ ${computerBoard[7]} == " " ]];
+	then
+			compuPosi=7
+	elif [[ ${computerBoard[9]} == " " ]];
+	then
+			compuPosi
+	fi
+}
+
 #computer moving to Winning Position
 function moveToPosition () {
 	j=1
 	while [ true ]
 	do
-			compuPosi=$((RANDOM%9 + 1))
+			getPosition
 			if [[ ${computerBoard[$j]} != $compuPos ]] $$ [[ ${computerBoard[$j+1]} != $compuPosi ]]
 			then
-					echo "Computer Position" $compuPosi
-					positionAvailable $compuPosi $computer
 					break
 			fi
 	done
 }
 
 #computer check if he can win then play that move
-function checkComputerMoveToWin () {
+function checkWhoMoveToWin () {
 	count=1
 	for ((j=1; j<$TOTAL_CELLS; j++))
 	do
 			if [[ ${playBoard[$j]} -eq $1 ]]
 			then
-					computerBoard[$count]=$j
-					((count++))
+					computerBoard[$pos]=$j
+					((pos++))
 			fi
 	done
 }
 
 #computer turn
 function computerTurn () {
-
-
-		checkComputerMoveToWin $computer
-		moveToPosition
-
-		echo "computer Turn"
+		echo "Computer Turn"
 		checkWhoIsMoveToWin $computer
 		checkWhoIsMoveToWin $player
 		if [ $pos -ge 4 ];
 		then
 				moveToPosition
 		else
-				getPosition
+				availableCorner
 		fi
 		echo "Computer Position" $compuPosi
 		positionAvailable $compuPosi $computer

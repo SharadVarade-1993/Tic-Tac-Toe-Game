@@ -1,20 +1,39 @@
+
 #!/bin/bash -x
 
 declare -a playBoard
 
 #CONSTANT
 TOTAL_CELLS=10
+NOUGHT="O"
+CROSS="X"
+
+#VARIABLES
+player=""
+computer=""
 
 #Assigning nought or cross to player
 function assignNoughtOrCross () {
-	number=$((RANDOM%2))
-	if [ $number -eq 0 ];
+	num=$((RANDOM%2))
+	if [ $num -eq 0 ];
 	then
 			player=$CROSS
 			computer=$NOUGHT
 	else
 			player=$NOUGHT
 			computer=$CROSS
+	fi
+}
+
+#checking who play first
+function checkPlayFirst () {
+	if [ $num -eq 0 ]
+	then
+			echo "Player play first"
+			assignNoughtOrCross
+	else
+			echo "computer play first"
+			assignNoughtOrCross
 	fi
 }
 
@@ -36,3 +55,7 @@ function resetBoard () {
 			playBoard[$count]=" "
 	done
 }
+
+displayBoard
+assignNoughtOrCross
+checkPlayFirst

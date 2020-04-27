@@ -88,6 +88,7 @@ function positionAvailable () {
 
 #Player Turn
 function playerTurn () {
+		echo "Player Turn"
 		read -p "Enter Position:" position
 		positionAvailable $position $player
 		displayBoard

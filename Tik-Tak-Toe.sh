@@ -3,6 +3,7 @@
 
 echo "Tik Tak Toe Problem"
 declare -a playBoard
+declare -A computerBoard
 
 #CONSTANT
 TOTAL_CELLS=10
@@ -23,7 +24,7 @@ function gameTie () {
 }
 
 #checking winner at Row
-function checkingRow () {
+function checkRow () {
 	for ((count=1; count<$TOTAL_CELLS; count=count+3))
 	do
 			temp=$count
@@ -38,7 +39,7 @@ function checkingRow () {
 
 
 #checking winner at column
-function checkingColumn () {
+function checkColumn () {
 	for ((count=1; count<4; count++))
 	do
 			temp=$count
@@ -52,7 +53,7 @@ function checkingColumn () {
 }
 
 #checking winner at diagonal
-function checkingDiagonal () {
+function checkDiagonal () {
 		if [[ ${playBoard[1]} == $letter ]] && [[ ${playBoard[5]} == $letter ]] && [[ ${playBoard[5]} == $letter ]] && [[ ${playBoard[9]} == $letter ]]
 		then
 				echo "$name IS Win"
@@ -69,9 +70,9 @@ function checkingDiagonal () {
 function checkWinner () {
 		letter=$1
 		name=$2
-		checkingRow
-		checkingColumn
-		checkingDiagonal
+		checkRow
+		checkColumn
+		checkDiagonal
 }
 
 #check Position Available
@@ -96,11 +97,39 @@ function playerTurn () {
 		num=1
 }
 
+#computer moving to Winning Position
+function moveToPosition () {
+	j=1
+	while [ true ]
+	do
+			compuPosi=$((RANDOM%9 + 1))
+			if [[ ${computerBoard[$j]} != $compuPos ]] $$ [[ ${computerBoard[$j+1]} != $compuPosi ]]
+			then
+					echo "Computer Position" $compuPosi
+					positionAvailable $compuPosi $computer
+					break
+			fi
+	done
+}
+
+#computer check if he can win then play that move
+function checkComputerMoveToWin () {
+	count=1
+	for ((j=1; j<$TOTAL_CELLS; j++))
+	do
+			if [[ ${playBoard[$j]} -eq $1 ]]
+			then
+					computerBoard[$count]=$j
+					((count++))
+			fi
+	done
+}
+
 #computer turn
 function computerTurn () {
-		compuPosi=$((RANDOM%9 + 1))
-		echo "computer position" $compuPosi
-		positionAvailable  $compuPosi $computer
+
+		checkComputerMoveToWin $computer
+		moveToPosition
 		displayBoard
 		checkWinner $computer "Computer"
 		num=0

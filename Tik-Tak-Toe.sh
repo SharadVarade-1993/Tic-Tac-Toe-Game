@@ -1,4 +1,3 @@
-
 #!/bin/bash -x
 
 echo "Tik Tak Toe Problem"
@@ -14,10 +13,16 @@ CROSS="X"
 player=""
 computer=""
 checkWin=0
+pos=1
+
+#get random position between 1 to 9
+function getPosition () {
+		compuPosi=$((RANDOM%9 + 1))
+}
 
 #game is tie
 function gameTie () {
-	if [ $i -eq $TOTAL_CELLS ];
+	if [ $i -eq $((TOTAL_CELLS-1)) ];
 	then
 			echo "Game is Tie"
 	fi
@@ -128,11 +133,49 @@ function checkComputerMoveToWin () {
 #computer turn
 function computerTurn () {
 
+
 		checkComputerMoveToWin $computer
 		moveToPosition
+
+		echo "computer Turn"
+		checkWhoIsMoveToWin $computer
+		checkWhoIsMoveToWin $player
+		if [ $pos -ge 4 ];
+		then
+				moveToPosition
+		else
+				getPosition
+		fi
+		echo "Computer Position" $compuPosi
+		positionAvailable $compuPosi $computer
 		displayBoard
 		checkWinner $computer "Computer"
 		num=0
+}
+
+#computer moving to winning position
+function moveToPosition () {
+	j=1
+	while [ true ]
+	do
+			getPosition
+			if [[ ${computerBoard[$j]} != $compuPosi ]] && [[ ${computerBoard[$j+1]} != $compuPosi ]]
+			then
+					break
+			fi
+	done
+}
+
+#computer check if who can win then play that move
+function checkWhoIsMoveToWin () {
+	for ((j=1; j<$TOTAL_CELLS; j++))
+	do
+			if [[ ${playBoard[$j]} == $1 ]]
+			then
+					computerBoard[$pos]=$j
+					((pos++))
+			fi
+	done
 }
 
 #change player

@@ -102,6 +102,14 @@ function playerTurn () {
 		num=1
 }
 
+#center position available
+function centerAvailable () {
+	if [[ ${playBoard[5]} == " " ]];
+	then
+			compuPosi=5
+	fi
+}
+
 #check available corner
 function availableCorner () {
 	if [[ ${computerBoard[1]} == " " ]];
@@ -153,8 +161,11 @@ function computerTurn () {
 		if [ $pos -ge 4 ];
 		then
 				moveToPosition
-		else
+		elif [ $pos -lt 4 ];
+		then
 				availableCorner
+		else
+				centerAvailable
 		fi
 		echo "Computer Position" $compuPosi
 		positionAvailable $compuPosi $computer

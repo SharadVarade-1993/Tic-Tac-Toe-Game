@@ -1,8 +1,8 @@
-
 #!/bin/bash -x
 
 echo "Tik Tak Toe Problem"
 declare -a playBoard
+declare -A computerBoard
 
 #CONSTANT
 TOTAL_CELLS=10
@@ -13,17 +13,23 @@ CROSS="X"
 player=""
 computer=""
 checkWin=0
+pos=1
+
+#get random position between 1 to 9
+function getPosition () {
+		compuPosi=$((RANDOM%9 + 1))
+}
 
 #game is tie
 function gameTie () {
-	if [ $i -eq $TOTAL_CELLS ];
+	if [ $i -eq $((TOTAL_CELLS-1)) ];
 	then
 			echo "Game is Tie"
 	fi
 }
 
 #checking winner at Row
-function checkingRow () {
+function checkRow () {
 	for ((count=1; count<$TOTAL_CELLS; count=count+3))
 	do
 			temp=$count
@@ -38,7 +44,7 @@ function checkingRow () {
 
 
 #checking winner at column
-function checkingColumn () {
+function checkColumn () {
 	for ((count=1; count<4; count++))
 	do
 			temp=$count
@@ -52,7 +58,7 @@ function checkingColumn () {
 }
 
 #checking winner at diagonal
-function checkingDiagonal () {
+function checkDiagonal () {
 		if [[ ${playBoard[1]} == $letter ]] && [[ ${playBoard[5]} == $letter ]] && [[ ${playBoard[5]} == $letter ]] && [[ ${playBoard[9]} == $letter ]]
 		then
 				echo "$name IS Win"
@@ -69,9 +75,9 @@ function checkingDiagonal () {
 function checkWinner () {
 		letter=$1
 		name=$2
-		checkingRow
-		checkingColumn
-		checkingDiagonal
+		checkRow
+		checkColumn
+		checkDiagonal
 }
 
 #check Position Available
@@ -98,12 +104,45 @@ function playerTurn () {
 
 #computer turn
 function computerTurn () {
-		compuPosi=$((RANDOM%9 + 1))
-		echo "computer position" $compuPosi
-		positionAvailable  $compuPosi $computer
+		echo "computer Turn"
+		checkWhoIsMoveToWin $computer
+		checkWhoIsMoveToWin $player
+		if [ $pos -ge 4 ];
+		then
+				moveToPosition
+		else
+				getPosition
+		fi
+		echo "Computer Position" $compuPosi
+		positionAvailable $compuPosi $computer
 		displayBoard
 		checkWinner $computer "Computer"
 		num=0
+}
+
+#computer moving to winning position
+function moveToPosition () {
+	j=1
+	while [ true ]
+	do
+			getPosition
+			if [[ ${computerBoard[$j]} != $compuPosi ]] && [[ ${computerBoard[$j+1]} != $compuPosi ]]
+			then
+					break
+			fi
+	done
+}
+
+#computer check if who can win then play that move
+function checkWhoIsMoveToWin () {
+	for ((j=1; j<$TOTAL_CELLS; j++))
+	do
+			if [[ ${playBoard[$j]} == $1 ]]
+			then
+					computerBoard[$pos]=$j
+					((pos++))
+			fi
+	done
 }
 
 #change player

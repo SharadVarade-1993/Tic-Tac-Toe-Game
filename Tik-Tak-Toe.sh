@@ -1,6 +1,7 @@
 
 #!/bin/bash -x
 
+echo "Tik Tak Toe Problem"
 declare -a playBoard
 
 #CONSTANT

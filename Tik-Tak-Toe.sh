@@ -1,3 +1,4 @@
+
 #!/bin/bash -x
 
 echo "Tik Tak Toe Problem"
@@ -14,6 +15,7 @@ player=""
 computer=""
 checkWin=0
 pos=1
+corner=0
 
 #get random position between 1 to 9
 function getPosition () {
@@ -59,7 +61,7 @@ function checkColumn () {
 
 #checking winner at diagonal
 function checkDiagonal () {
-		if [[ ${playBoard[1]} == $letter ]] && [[ ${playBoard[5]} == $letter ]] && [[ ${playBoard[5]} == $letter ]] && [[ ${playBoard[9]} == $letter ]]
+		if [[ ${playBoard[1]} == $letter ]] && [[ ${playBoard[5]} == $letter ]] && [[ ${playBoard[9]} == $letter ]]
 		then
 				echo "$name IS Win"
 				checkWin=1
@@ -82,10 +84,10 @@ function checkWinner () {
 
 #check Position Available
 function positionAvailable () {
-	position=$1
-	if [[ ${playBoard[$position]}  == " " ]];
+	posi=$1
+	if [[ ${playBoard[$posi]}  == " " ]]
 	then
-			playBoard[$position]=$2
+			playBoard[$posi]=$2
 	else
 			echo "Please Enter valid position"
 			changePlayer
@@ -115,15 +117,19 @@ function availableCorner () {
 	if [[ ${computerBoard[1]} == " " ]];
 	then
 			compuPosi=1
+			corner=1
 	elif [[ ${computerBoard[3]} == " " ]];
 	then
 			compuPosi=3
+			corner=1
 	elif [[ ${computerBoard[7]} == " " ]];
 	then
 			compuPosi=7
+			corner=1
 	elif [[ ${computerBoard[9]} == " " ]];
 	then
-			compuPosi
+			compuPosi=9
+			corner
 	fi
 }
 
@@ -133,7 +139,7 @@ function moveToPosition () {
 	while [ true ]
 	do
 			getPosition
-			if [[ ${computerBoard[$j]} != $compuPos ]] $$ [[ ${computerBoard[$j+1]} != $compuPosi ]]
+			if [[ ${computerBoard[$j]} != $compuPosi ]] && [[ ${computerBoard[$j+1]} != $compuPosi ]]
 			then
 					break
 			fi
@@ -142,10 +148,9 @@ function moveToPosition () {
 
 #computer check if he can win then play that move
 function checkWhoMoveToWin () {
-	count=1
 	for ((j=1; j<$TOTAL_CELLS; j++))
 	do
-			if [[ ${playBoard[$j]} -eq $1 ]]
+			if [[ ${playBoard[$j]} == $1 ]]
 			then
 					computerBoard[$pos]=$j
 					((pos++))
@@ -164,8 +169,11 @@ function computerTurn () {
 		elif [ $pos -lt 4 ];
 		then
 				availableCorner
-		else
+		elif [ $corner -eq 0 ];
+		then
 				centerAvailable
+		else
+				getPosition
 		fi
 		echo "Computer Position" $compuPosi
 		positionAvailable $compuPosi $computer
@@ -213,7 +221,7 @@ function changePlayer () {
 
 #Assigning nought or cross to player
 function assignNoughtOrCross () {
-	num=$((RANDOM%2))
+
 	if [ $num -eq 0 ];
 	then
 			player=$CROSS
@@ -226,7 +234,8 @@ function assignNoughtOrCross () {
 
 #checking who play first
 function checkPlayFirst () {
-	if [ $num -eq 0 ]
+	num=$((RANDOM%2))
+	if [ $num -eq 0  ]
 	then
 			echo "Player play first"
 			assignNoughtOrCross
